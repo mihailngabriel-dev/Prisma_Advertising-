@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Prisma OOH Planner</title>
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+<link rel="stylesheet" href="styles.css?v=11" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><img src="assets/prisma_logo.jpg" alt="Prisma Advertising"><div><strong>OOH Planner</strong><span>Portofoliu OOH & mountain media</span></div></div>
+  <button class="selection-btn" id="selectionBtn">Selecția mea <span id="selectionCount">0</span></button>
+</header>
+<section class="hero">
+  <div class="hero-copy">
+    <span class="eyebrow">PRISMA ADVERTISING</span>
+    <h1>Locații OOH selectate, într-o interfață simplă pentru client.</h1>
+    <p>Explorează portofoliul pe hartă sau în catalog, filtrează după zonă și selectează pozițiile de interes. Cererea de ofertă ajunge direct la Prisma Advertising.</p>
+    <div class="hero-actions"><button class="primary" data-scroll="#locations">Vezi locațiile</button><button class="ghost" id="openMapHero">Deschide harta</button></div>
+  </div>
+  <div class="portfolio-card">
+    <span class="eyebrow">PORTOFOLIU</span><div class="big-number" id="totalLocations">0</div><div class="big-label">poziții / formate în catalog</div>
+    <div class="portfolio-grid"><div><b>București & DN1</b><span>mesh / unipol</span></div><div><b>Sinaia</b><span>gondolă / telecabină</span></div><div><b>Transalpina</b><span>ski resort branding</span></div><div><b>Winmarkt</b><span>mesh urban</span></div></div>
+    <div class="offline-badge">✓ Optimizat pentru mobil · Hartă interactivă · Cerere ofertă directă</div>
+  </div>
+</section>
+<main id="locations">
+  <div class="section-head">
+    <div><span class="eyebrow">INVENTAR</span><h2 id="inventoryCount">Locații</h2></div>
+    <div class="toolbar"><div class="search-wrap"><input id="searchInput" type="search" placeholder="Caută oraș, adresă, cod, format..." /></div><div class="view-switch"><button id="listViewBtn" class="view-btn active">Listă</button><button id="mapViewBtn" class="view-btn">Hartă</button></div></div>
+  </div>
+  <div class="filters" id="filters"></div>
+  <section id="mapPanel" class="map-panel" hidden>
+    <div class="map-head"><div><strong>Harta locațiilor</strong><span>Pinurile urmează adresa / punctul GPS disponibil în portofoliu.</span></div><button class="ghost" id="fitMapBtn">Vezi toate</button></div>
+    <div id="map"></div>
+    <div class="map-legend"><span><i class="dot exact"></i>GPS / punct identificat</span><span><i class="dot venue"></i>punct comun de locație / adresă</span></div>
+  </section>
+  <div class="grid" id="locationGrid"></div>
+</main>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head"><div><span class="eyebrow">PREVIEW</span><h2>Selecția mea</h2></div><button class="icon-btn" id="closeDrawer">×</button></div>
+  <div id="selectedList" class="selected-list"></div>
+  <div class="offer-fields"><label>Nume / companie<input id="clientName" placeholder="Ex. Compania ABC"></label><label>Campanie / perioadă<input id="campaignName" placeholder="Ex. Septembrie - Octombrie 2026"></label><label>Telefon / e-mail<input id="clientContact" placeholder="Datele tale de contact"></label></div>
+  <div class="total-row"><span>Subtotal tarife lunare</span><strong id="offerTotal">0 EUR</strong></div><div id="totalHint" class="total-hint"></div>
+  <p class="vat-note">Aceasta este doar o selecție orientativă. Oferta comercială finală, disponibilitatea și condițiile se confirmă de Prisma Advertising.</p>
+  <div class="request-actions"><button class="primary full" id="requestWhatsapp">Cere ofertă pe WhatsApp</button><button class="ghost full" id="requestEmail">Cere ofertă pe e-mail</button></div><button class="ghost full clear-btn" id="clearSelection">Golește selecția</button>
+</aside>
+<div class="modal-backdrop" id="modalBackdrop"></div>
+<div class="modal" id="detailModal" role="dialog" aria-modal="true"><button class="modal-close" id="modalClose">×</button><div id="modalContent"></div></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="locations.js?v=11"></script><script src="app.js?v=11"></script>
+</body></html>
