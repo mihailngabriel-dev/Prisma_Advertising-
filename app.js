@@ -2,6 +2,8 @@ let currentFilter='all';
 let query='';
 let selected=new Set(JSON.parse(localStorage.getItem('prismaSelected')||'[]'));
 let currentView='list';
+let sortMode='default';
+let favorites=new Set(JSON.parse(localStorage.getItem('prismaFavorites')||'[]'));
 let map=null, markerLayer=null;
 const markerIndex=new Map();
 const grid=document.getElementById('locationGrid');
@@ -56,14 +58,34 @@ function renderFilters(){
 }
 function filtered(){
  const q=query.toLowerCase().trim();
- return locations.filter(x=>(currentFilter==='all'||x.group===currentFilter)&&(!q||[x.name,x.area,x.address,x.meta1,x.meta2].join(' ').toLowerCase().includes(q)));
+ const items=locations.filter(x=>(currentFilter==='all'||x.group===currentFilter)&&(!q||[x.name,x.area,x.address,x.meta1,x.meta2].join(' ').toLowerCase().includes(q)));
+ if(sortMode==='name') items.sort((a,b)=>a.name.localeCompare(b.name,'ro'));
+ if(sortMode==='priceAsc') items.sort((a,b)=>(Number(a.price)||0)-(Number(b.price)||0));
+ if(sortMode==='priceDesc') items.sort((a,b)=>(Number(b.price)||0)-(Number(a.price)||0));
+ if(sortMode==='favorites') items.sort((a,b)=>(favorites.has(b.id)?1:0)-(favorites.has(a.id)?1:0));
+ return items;
+}
+function badgesFor(x){
+ const out=[];
+ if(x.group==='Sinaia'||x.group==='Transalpina') out.push(['MOUNTAIN MEDIA','']);
+ else if(x.group==='Winmarkt') out.push(['URBAN','']);
+ else if(x.area&&/DN1|Otopeni/i.test(x.area+' '+x.address)) out.push(['DN1 / OTOPENI','']);
+ else out.push(['OOH','']);
+ const typ=String(x.meta1||'').trim();
+ if(typ && typ.length<22) out.push([typ.toUpperCase(),'secondary']);
+ return out.slice(0,2);
+}
+function toggleFavorite(id){
+ favorites.has(id)?favorites.delete(id):favorites.add(id);
+ localStorage.setItem('prismaFavorites',JSON.stringify([...favorites]));
+ renderCards();
 }
 function renderCards(){
  const items=filtered();
  document.getElementById('inventoryCount').textContent=`${items.length} ${items.length===1?'locație':'locații'}`;
  grid.innerHTML=items.length?items.map(x=>`<article class="card group-${x.group.toLowerCase().replace(/[^a-z0-9]+/g,'-')}">
-  <div class="card-media"><img loading="lazy" src="${x.image}" alt="${esc(x.name)}"><span class="area-tag">${esc(x.area)}</span></div>
-  <div class="card-body"><div class="card-title-row"><h3>${esc(x.name)}</h3><div class="price-wrap"><div class="price">${esc(x.priceLabel)}</div><div class="price-note">* Producția, decorarea/neutralizarea fac obiectul unei negocieri separate.</div></div></div>
+  <div class="card-media"><img loading="lazy" src="${x.image}" alt="${esc(x.name)}"><span class="area-tag">${esc(x.area)}</span><button class="favorite-btn ${favorites.has(x.id)?'active':''}" type="button" aria-label="${favorites.has(x.id)?'Elimină din favorite':'Adaugă la favorite'}" onclick="toggleFavorite('${x.id}')">${favorites.has(x.id)?'★':'☆'}</button></div>
+  <div class="card-body"><div class="badge-row">${badgesFor(x).map(([b,c])=>`<span class="info-badge ${c}">${esc(b)}</span>`).join('')}</div><div class="card-title-row"><h3>${esc(x.name)}</h3><div class="price-wrap"><div class="price">${esc(x.priceLabel)}</div><div class="price-note">* Producția, decorarea/neutralizarea fac obiectul unei negocieri separate.</div></div></div>
   <div class="meta"><div><span>${esc(x.meta1Label)}</span><strong>${esc(x.meta1)}</strong></div><div><span>${esc(x.meta2Label)}</span><strong>${esc(x.meta2)}</strong></div></div>
   <div class="address">${esc(x.address)}</div>
   <div class="card-actions"><button class="ghost" data-map-id="${x.id}">Pe hartă</button><button class="ghost" onclick="openDetails('${x.id}')">Detalii</button><button class="primary ${selected.has(x.id)?'selected':''}" onclick="toggleSelect('${x.id}')">${selected.has(x.id)?'✓ Selectat':'Adaugă în selecție'}</button></div></div></article>`).join(''):'<div class="no-results">Nu am găsit locații pentru filtrul selectat.</div>';
@@ -151,9 +173,10 @@ function focusLocationOnMap(id){
 }
 
 document.getElementById('searchInput').addEventListener('input',e=>{query=e.target.value;renderCards();renderMapMarkers()});
+document.getElementById('sortSelect').addEventListener('change',e=>{sortMode=e.target.value;renderCards();renderMapMarkers()});
 document.querySelectorAll('[data-scroll]').forEach(b=>b.addEventListener('click',()=>document.querySelector(b.dataset.scroll).scrollIntoView({behavior:'smooth'})));
 document.getElementById('selectionBtn').onclick=openDrawer;document.getElementById('closeDrawer').onclick=closeDrawer;drawerBackdrop.onclick=closeDrawer;document.getElementById('modalClose').onclick=closeModal;modalBackdrop.onclick=closeModal;document.getElementById('clearSelection').onclick=()=>{selected.clear();renderCards();renderSelection();renderMapMarkers()};document.getElementById('requestWhatsapp').onclick=requestWhatsapp;document.getElementById('requestEmail').onclick=requestEmail;
 document.getElementById('listViewBtn').onclick=()=>setViewMode('list');document.getElementById('mapViewBtn').onclick=()=>setViewMode('map');document.getElementById('openMapHero').onclick=()=>{document.getElementById('locations').scrollIntoView({behavior:'smooth'});setTimeout(()=>setViewMode('map'),300)};document.getElementById('fitMapBtn').onclick=fitVisibleMap;
-window.toggleSelect=toggleSelect;window.openDetails=openDetails;
+window.toggleSelect=toggleSelect;window.openDetails=openDetails;window.toggleFavorite=toggleFavorite;
 document.getElementById('totalLocations').textContent=locations.length;
 renderFilters();renderCards();renderSelection();

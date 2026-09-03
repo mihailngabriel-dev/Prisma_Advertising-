@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
-<link rel="stylesheet" href="styles.css?v=11" />
+<link rel="stylesheet" href="styles.css?v=14" />
 </head>
 <body>
 <header class="topbar">
@@ -25,13 +25,12 @@
   <div class="portfolio-card">
     <span class="eyebrow">PORTOFOLIU</span><div class="big-number" id="totalLocations">0</div><div class="big-label">poziții / formate în catalog</div>
     <div class="portfolio-grid"><div><b>București & DN1</b><span>mesh / unipol</span></div><div><b>Sinaia</b><span>gondolă / telecabină</span></div><div><b>Transalpina</b><span>ski resort branding</span></div><div><b>Winmarkt</b><span>mesh urban</span></div></div>
-    <div class="offline-badge">✓ Optimizat pentru mobil · Hartă interactivă · Cerere ofertă directă</div>
   </div>
 </section>
 <main id="locations">
   <div class="section-head">
     <div><span class="eyebrow">INVENTAR</span><h2 id="inventoryCount">Locații</h2></div>
-    <div class="toolbar"><div class="search-wrap"><input id="searchInput" type="search" placeholder="Caută oraș, adresă, cod, format..." /></div><div class="view-switch"><button id="listViewBtn" class="view-btn active">Listă</button><button id="mapViewBtn" class="view-btn">Hartă</button></div></div>
+    <div class="toolbar"><div class="search-wrap"><input id="searchInput" type="search" placeholder="Caută oraș, adresă, cod, format..." /></div><select id="sortSelect" class="sort-select" aria-label="Sortează locațiile"><option value="default">Sortează</option><option value="name">Nume A-Z</option><option value="priceAsc">Preț crescător</option><option value="priceDesc">Preț descrescător</option><option value="favorites">Favorite primele</option></select><div class="view-switch"><button id="listViewBtn" class="view-btn active">Listă</button><button id="mapViewBtn" class="view-btn">Hartă</button></div></div>
   </div>
   <div class="filters" id="filters"></div>
   <section id="mapPanel" class="map-panel" hidden>
@@ -54,5 +53,5 @@
 <div class="modal" id="detailModal" role="dialog" aria-modal="true"><button class="modal-close" id="modalClose">×</button><div id="modalContent"></div></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-<script src="locations.js?v=11"></script><script src="app.js?v=11"></script>
+<script src="locations.js?v=14"></script><script src="app.js?v=14"></script>
 </body></html>
