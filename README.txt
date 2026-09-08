@@ -1,13 +1,21 @@
-PRISMA OOH PLANNER - ONLINE
+PRISMA OOH PUBLIC V15 - COMMERCIAL UI
+Actualizare de interfata peste repository-ul existent.
 
-Actualizare V10:
-- Selecția clientului funcționează ca preview.
-- Generarea PDF a fost eliminată din interfața publică.
-- Cererile de ofertă se trimit prin WhatsApp la 0763 504 228 sau prin e-mail la mihail.n.gabriel@gmail.com.
-- Mesajul include automat locațiile selectate, prețurile afișate și datele completate de client.
+INCARCARE GITHUB:
+- Urca in root: index.html, app.js, styles.css, README.txt
+- NU modifica locations.js
+- NU modifica folderul assets
+- GitHub Pages se actualizeaza automat dupa Commit.
 
-V11 PUBLIC:
-- Interfata client fara buton/admin panel.
-- Mod Lista / Harta cu OpenStreetMap + clustering.
-- Selectie si cerere oferta WhatsApp/e-mail.
-- Harta foloseste GPS-ul disponibil sau punctul comun al locatiei pentru formatele din aceeasi incinta.
+V15 include:
+- hero comercial cu imagine reala Prisma
+- categorii vizuale
+- sectiune Recomandate de Prisma
+- carduri mai compacte
+- harta integrata cu catalogul
+- favorite
+- selectie flotanta
+- doar 12 locatii initial + Vezi mai multe
+- navigatie mobila
+- cerere oferta WhatsApp / e-mail
+- fara interfata Admin

@@ -3,43 +3,76 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Prisma OOH Planner</title>
+<meta name="theme-color" content="#0c1523" />
+<title>Prisma Advertising - Locații OOH</title>
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
-<link rel="stylesheet" href="styles.css?v=14" />
+<link rel="stylesheet" href="styles.css?v=15" />
 </head>
 <body>
 <header class="topbar">
-  <div class="brand"><img src="assets/prisma_logo.jpg" alt="Prisma Advertising"><div><strong>OOH Planner</strong><span>Portofoliu OOH & mountain media</span></div></div>
-  <button class="selection-btn" id="selectionBtn">Selecția mea <span id="selectionCount">0</span></button>
+  <a class="brand" href="#top" aria-label="Prisma Advertising"><img src="assets/prisma_logo.jpg" alt="Prisma Advertising"></a>
+  <nav class="desktop-nav" aria-label="Navigație principală"><a href="#locations">Locații</a><button type="button" id="navMap">Hartă</button><a href="#about">Despre noi</a><a href="#contact">Contact</a></nav>
+  <div class="header-search"><span>⌕</span><input id="headerSearch" type="search" placeholder="Caută locații, zone sau formate..." aria-label="Caută locații"></div>
+  <button class="favorite-header" id="favoritesHeader" type="button" aria-label="Vezi favoritele">♡ <span id="favoriteCount">0</span></button>
+  <button class="selection-btn" id="selectionBtn">Cere ofertă <span id="selectionCount">0</span></button>
 </header>
-<section class="hero">
+
+<section class="hero" id="top">
+  <div class="hero-overlay"></div>
   <div class="hero-copy">
-    <span class="eyebrow">PRISMA ADVERTISING</span>
-    <h1>Locații OOH selectate, într-o interfață simplă pentru client.</h1>
-    <p>Explorează portofoliul pe hartă sau în catalog, filtrează după zonă și selectează pozițiile de interes. Cererea de ofertă ajunge direct la Prisma Advertising.</p>
-    <div class="hero-actions"><button class="primary" data-scroll="#locations">Vezi locațiile</button><button class="ghost" id="openMapHero">Deschide harta</button></div>
-  </div>
-  <div class="portfolio-card">
-    <span class="eyebrow">PORTOFOLIU</span><div class="big-number" id="totalLocations">0</div><div class="big-label">poziții / formate în catalog</div>
-    <div class="portfolio-grid"><div><b>București & DN1</b><span>mesh / unipol</span></div><div><b>Sinaia</b><span>gondolă / telecabină</span></div><div><b>Transalpina</b><span>ski resort branding</span></div><div><b>Winmarkt</b><span>mesh urban</span></div></div>
+    <span class="eyebrow orange">OUTDOOR. UNDE CONTEAZĂ.</span>
+    <h1>Locații OOH care pun brandul în mișcare.</h1>
+    <p>Vizibilitate reală. Locații strategice. Selecție rapidă pentru campanii locale, regionale și naționale.</p>
+    <div class="hero-stats">
+      <div><strong id="heroTotal">0</strong><span>locații</span></div>
+      <div><strong id="heroZones">0</strong><span>zone principale</span></div>
+      <button type="button" id="openMapHero"><strong>Hartă</strong><span>interactivă</span></button>
+    </div>
+    <div class="hero-actions"><button class="primary" data-scroll="#locations">Explorează locațiile →</button><button class="ghost-light" id="openMapHero2">Vezi harta</button></div>
   </div>
 </section>
-<main id="locations">
-  <div class="section-head">
-    <div><span class="eyebrow">INVENTAR</span><h2 id="inventoryCount">Locații</h2></div>
-    <div class="toolbar"><div class="search-wrap"><input id="searchInput" type="search" placeholder="Caută oraș, adresă, cod, format..." /></div><select id="sortSelect" class="sort-select" aria-label="Sortează locațiile"><option value="default">Sortează</option><option value="name">Nume A-Z</option><option value="priceAsc">Preț crescător</option><option value="priceDesc">Preț descrescător</option><option value="favorites">Favorite primele</option></select><div class="view-switch"><button id="listViewBtn" class="view-btn active">Listă</button><button id="mapViewBtn" class="view-btn">Hartă</button></div></div>
-  </div>
-  <div class="filters" id="filters"></div>
-  <section id="mapPanel" class="map-panel" hidden>
-    <div class="map-head"><div><strong>Harta locațiilor</strong><span>Pinurile urmează adresa / punctul GPS disponibil în portofoliu.</span></div><button class="ghost" id="fitMapBtn">Vezi toate</button></div>
-    <div id="map"></div>
-    <div class="map-legend"><span><i class="dot exact"></i>GPS / punct identificat</span><span><i class="dot venue"></i>punct comun de locație / adresă</span></div>
+
+<section class="category-strip" aria-label="Categorii principale">
+  <div class="category-track" id="categoryTrack"></div>
+</section>
+
+<main>
+  <section class="featured-section" id="featured">
+    <div class="section-title-row"><div><span class="eyebrow">RECOMANDATE DE PRISMA</span><h2>Poziții cu impact vizual ridicat</h2><p>O selecție scurtă pentru cei care vor să pornească repede de la locațiile cele mai comerciale.</p></div><button class="text-link" data-scroll="#locations">Vezi toate locațiile →</button></div>
+    <div class="featured-grid" id="featuredGrid"></div>
   </section>
-  <div class="grid" id="locationGrid"></div>
+
+  <section class="inventory-section" id="locations">
+    <div class="inventory-layout">
+      <aside class="map-mini-panel" id="mapMiniPanel">
+        <div class="map-mini-head"><div><span class="eyebrow">HARTĂ</span><h3>Explorează vizual</h3></div><button type="button" id="fitMapBtn" class="icon-square" aria-label="Vezi toate pinurile">⛶</button></div>
+        <div id="map"></div>
+        <div class="map-legend"><span><i class="dot exact"></i>GPS exact</span><span><i class="dot venue"></i>zonă / incintă</span></div>
+      </aside>
+      <div class="catalog-panel">
+        <div class="section-title-row inventory-head"><div><span class="eyebrow">CATALOG</span><h2 id="inventoryCount">Toate locațiile</h2></div><div class="view-switch"><button id="listViewBtn" class="view-btn active">Grid</button><button id="mapViewBtn" class="view-btn">Hartă</button></div></div>
+        <div class="toolbar"><div class="search-wrap"><input id="searchInput" type="search" placeholder="Caută oraș, adresă, cod, format..." /></div><select id="sortSelect" class="sort-select"><option value="default">Sortează: relevanță</option><option value="name">Nume A-Z</option><option value="priceAsc">Preț crescător</option><option value="priceDesc">Preț descrescător</option><option value="favorites">Favorite primele</option></select></div>
+        <div class="filters" id="filters"></div>
+        <div class="grid" id="locationGrid"></div>
+        <button class="load-more" id="loadMoreBtn" type="button">Vezi mai multe locații</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-section" id="about"><div><span class="eyebrow">PRISMA ADVERTISING</span><h2>OOH ales pentru vizibilitate și rezultate.</h2></div><p>Prisma Advertising selectează și structurează soluții OOH pentru campanii cu expunere relevantă: mesh-uri urbane, roadside, formate speciale, retail și mountain media. Clientul poate explora, salva și trimite rapid o selecție pentru ofertare personalizată.</p></section>
 </main>
+
+<section class="cta-band" id="contact"><div><span>Nu ai găsit ce cauți?</span><strong>Spune-ne obiectivul campaniei și îți recomandăm pozițiile potrivite.</strong></div><button class="primary" id="ctaSelection">Cere ofertă →</button></section>
+
+<footer><img src="assets/prisma_logo.jpg" alt="Prisma Advertising"><div><strong>Prisma Advertising</strong><span>0763 504 228 · mihail.n.gabriel@gmail.com</span></div><span class="footer-copy">Selecție de locații · planificare · implementare · monitorizare</span></footer>
+
+<div class="selection-float" id="selectionFloat"><span><strong id="selectionFloatCount">0</strong> locații selectate</span><button type="button" id="selectionFloatBtn">Vezi selecția →</button></div>
+
+<nav class="mobile-nav" aria-label="Navigație mobilă"><a href="#locations">⌖<span>Locații</span></a><button type="button" id="mobileMap">◫<span>Hartă</span></button><button type="button" id="mobileFav">♡<span>Favorite</span></button><button type="button" id="mobileSelection">▣<span>Selecția mea</span><b id="mobileSelectionCount">0</b></button></nav>
+
 <div class="drawer-backdrop" id="drawerBackdrop"></div>
 <aside class="drawer" id="drawer">
   <div class="drawer-head"><div><span class="eyebrow">PREVIEW</span><h2>Selecția mea</h2></div><button class="icon-btn" id="closeDrawer">×</button></div>
@@ -51,7 +84,8 @@
 </aside>
 <div class="modal-backdrop" id="modalBackdrop"></div>
 <div class="modal" id="detailModal" role="dialog" aria-modal="true"><button class="modal-close" id="modalClose">×</button><div id="modalContent"></div></div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-<script src="locations.js?v=14"></script><script src="app.js?v=14"></script>
+<script src="locations.js?v=15"></script><script src="app.js?v=15"></script>
 </body></html>
